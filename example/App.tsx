@@ -4,7 +4,7 @@ import {StatusBar} from 'expo-status-bar';
 
 import SelectHorizontal, {
   type SelectHorizontalItem,
-} from 'react-native-select-horizontal';
+} from '@acertijosapps/react-native-select-horizontal';
 
 const FREQUENCY: SelectHorizontalItem[] = [
   {id: 1, label: 'Daily'},

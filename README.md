@@ -1,4 +1,4 @@
-# react-native-select-horizontal
+# @acertijosapps/react-native-select-horizontal
 
 A dependency-free horizontal stepper / selector for React Native. Page through a
 list of options with left/right arrows. Everything is driven by props with
@@ -14,15 +14,15 @@ sizes, fonts and even custom arrow icons.
 ## Install
 
 ```bash
-yarn add react-native-select-horizontal
+yarn add @acertijosapps/react-native-select-horizontal
 # or
-npm install react-native-select-horizontal
+npm install @acertijosapps/react-native-select-horizontal
 ```
 
 ## Usage
 
 ```tsx
-import SelectHorizontal from 'react-native-select-horizontal';
+import SelectHorizontal from '@acertijosapps/react-native-select-horizontal';
 
 const data = [
     { id: 1, label: 'Daily' },
@@ -73,7 +73,7 @@ import {
     DEFAULT_FONT_SIZE,
     DEFAULT_ICON_SIZE,
     DEFAULT_PRIMARY_COLOR,
-} from 'react-native-select-horizontal';
+} from '@acertijosapps/react-native-select-horizontal';
 ```
 
 ### Custom arrows

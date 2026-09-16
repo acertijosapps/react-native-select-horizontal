@@ -1,5 +1,5 @@
 {
-  "name": "react-native-select-horizontal",
+  "name": "@acertijosapps/react-native-select-horizontal",
   "version": "1.0.0",
   "description": "A dependency-free horizontal stepper/selector for React Native. Navigate a list of options with left/right arrows. Fully themeable via props: colors, fonts, sizes and custom arrow icons.",
   "keywords": [
