@@ -1,14 +1,15 @@
 # @acertijosapps/react-native-select-horizontal
 
-A dependency-free horizontal stepper / selector for React Native. Page through a
-list of options with left/right arrows. Everything is driven by props with
-sensible constant defaults, so you plug in your own design system — colors,
-sizes, fonts and even custom arrow icons.
+A sleek, mobile-first alternative to the traditional dropdown for React Native.
+Instead of opening a menu that covers the screen, users step through the options
+inline with left/right arrows — a faster, one-handed, thumb-friendly pattern
+built for phones. Dependency-free and fully themeable, so it adopts your design
+system: colors, sizes, fonts and even custom arrow icons.
 
 **Zero runtime dependencies.** Only `react` and `react-native` as peers.
 
 <p align="center">
-  <img src="assets/preview.svg" alt="SelectHorizontal preview" width="440" />
+  <img src="https://gitlab.com/acertijoslibs/rnselecthorizontal/-/raw/main/assets/preview.png" alt="SelectHorizontal preview" width="360" />
 </p>
 
 ## Install
