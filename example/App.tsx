@@ -19,6 +19,16 @@ const SIZES: SelectHorizontalItem[] = [
   {id: 'lg', label: 'Large'},
 ];
 
+const LONG_TEXT: SelectHorizontalItem[] = [
+  {id: 1, label: 'Short'},
+  {
+    id: 2,
+    label:
+      'This is an extremely long option label that should not fit inside the bar and will test how the value text overflows',
+  },
+  {id: 3, label: 'Another very long label to check the overflow behaviour again'},
+];
+
 function Section({title, children}: {title: string; children: React.ReactNode}) {
   return (
     <View style={styles.section}>
@@ -81,6 +91,17 @@ export default function App(): React.JSX.Element {
             primaryColor="#E02241"
             accentColor="#FFFFFF"
             style={styles.rounded}
+          />
+        </Section>
+
+        <Section title="Long text (overflow) + iconStyle">
+          <SelectHorizontal
+            labelText="Overflow test"
+            data={LONG_TEXT}
+            startPosition={1}
+            primaryColor="#6C3AED"
+            accentColor="#FFFFFF"
+            iconStyle={{fontWeight: '700'}}
           />
         </Section>
       </ScrollView>

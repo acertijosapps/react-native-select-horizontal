@@ -115,6 +115,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 | `style`                 | `ViewStyle`                                   | —           | Selector bar style.                           |
 | `labelStyle`            | `TextStyle`                                   | —           | Extra label style.                            |
 | `valueStyle`            | `TextStyle`                                   | —           | Extra value style.                            |
+| `iconStyle`             | `TextStyle`                                   | —           | Style for the default chevrons (ignored with custom render). |
 | `testID`                | `string`                                      | —           | testID for the root view.                     |
 
 ## Example

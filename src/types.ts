@@ -73,6 +73,8 @@ export interface SelectHorizontalProps<T extends SelectHorizontalItem = SelectHo
     labelStyle?: TextStyle;
     /** Extra style for the selected value text. */
     valueStyle?: TextStyle;
+    /** Extra style for the default chevron glyphs. Ignored when `renderLeftIcon`/`renderRightIcon` are set. */
+    iconStyle?: TextStyle;
 
     /** testID for the root view. */
     testID?: string;

@@ -6,7 +6,6 @@ import {
     DEFAULT_BORDER_RADIUS,
     DEFAULT_FONT_SIZE,
     DEFAULT_ICON_SIZE,
-    DEFAULT_LABEL_SPACING,
     DEFAULT_PRIMARY_COLOR,
     FONT_WEIGHT,
 } from './constants';
@@ -22,7 +21,6 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
         onChange,
         fontSize = DEFAULT_FONT_SIZE,
         iconSize = DEFAULT_ICON_SIZE,
-        labelSpacing = DEFAULT_LABEL_SPACING,
         borderRadius = DEFAULT_BORDER_RADIUS,
         primaryColor = DEFAULT_PRIMARY_COLOR,
         accentColor = DEFAULT_ACCENT_COLOR,
@@ -36,6 +34,7 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
         style,
         labelStyle,
         valueStyle,
+        iconStyle,
         testID,
     } = props;
 
@@ -46,7 +45,7 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
     );
 
     const lastIndex = data.length - 1;
-    const arrowSlotWidth = iconSize * 2;
+    const arrowSlotSize = iconSize * 2;
     const resolvedIconColor = iconColor ?? accentColor;
     const isLabelVisible = !!labelText && labelText.trim() !== '';
 
@@ -84,12 +83,15 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
 
         return (
             <Text
-                style={{
-                    fontSize: iconSize,
-                    lineHeight: iconSize,
-                    color: resolvedIconColor,
-                    fontFamily,
-                }}
+                style={[
+                    {
+                        fontSize: iconSize,
+                        lineHeight: iconSize,
+                        color: resolvedIconColor,
+                        fontFamily,
+                    },
+                    iconStyle,
+                ]}
             >
                 {direction === 'left' ? '‹' : '›'}
             </Text>
@@ -106,7 +108,6 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
                     style={[
                         {
                             fontSize,
-                            paddingVertical: labelSpacing,
                             color: primaryColor,
                             fontFamily,
                             fontWeight: labelFontWeight,
@@ -125,18 +126,18 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
                     <TouchableOpacity
                         testID="btnLeft"
                         activeOpacity={0.6}
-                        style={[styles.button, { width: arrowSlotWidth }]}
+                        style={[styles.button, { height: arrowSlotSize, width: arrowSlotSize }]}
                         onPress={handleMinus}
                     >
                         {renderArrow('left', renderLeftIcon)}
                     </TouchableOpacity>
                 ) : (
-                    <View style={{ width: arrowSlotWidth }} />
+                    <View style={{ height: arrowSlotSize, width: arrowSlotSize }} />
                 )}
 
                 <Text
                     numberOfLines={1}
-                    adjustsFontSizeToFit
+                    ellipsizeMode="middle"
                     style={[
                         styles.txtBody,
                         {
@@ -155,13 +156,13 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
                     <TouchableOpacity
                         testID="btnRight"
                         activeOpacity={0.6}
-                        style={[styles.button, { width: arrowSlotWidth }]}
+                        style={[styles.button, { height: arrowSlotSize, width: arrowSlotSize }]}
                         onPress={handlePlus}
                     >
                         {renderArrow('right', renderRightIcon)}
                     </TouchableOpacity>
                 ) : (
-                    <View style={{ width: arrowSlotWidth }} />
+                    <View style={{ height: arrowSlotSize, width: arrowSlotSize }} />
                 )}
             </View>
         </View>
@@ -175,7 +176,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     button: {
-        padding: 5,
         alignItems: 'center',
         justifyContent: 'center',
     },
