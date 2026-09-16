@@ -1,0 +1,12 @@
+node_modules
+*.log
+
+# Salida de build (la genera tsc)
+lib
+
+# Documentación curada a mano: no la reformatea Prettier
+README.md
+
+# Config de agentes
+.claude
+.agents
