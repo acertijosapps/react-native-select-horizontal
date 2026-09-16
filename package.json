@@ -19,6 +19,7 @@
   "files": [
     "src",
     "lib",
+    "assets",
     "README.md",
     "LICENSE"
   ],

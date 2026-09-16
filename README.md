@@ -1,11 +1,15 @@
 # react-native-select-horizontal
 
 A dependency-free horizontal stepper / selector for React Native. Page through a
-list of options with left/right arrows. No `useDimens`, no
-`react-native-vector-icons`, no theme file — everything is driven by props with
-sensible constant defaults, so you plug in your own design system.
+list of options with left/right arrows. Everything is driven by props with
+sensible constant defaults, so you plug in your own design system — colors,
+sizes, fonts and even custom arrow icons.
 
 **Zero runtime dependencies.** Only `react` and `react-native` as peers.
+
+<p align="center">
+  <img src="assets/preview.svg" alt="SelectHorizontal preview" width="440" />
+</p>
 
 ## Install
 
@@ -21,71 +25,77 @@ npm install react-native-select-horizontal
 import SelectHorizontal from 'react-native-select-horizontal';
 
 const data = [
-  {id: 1, label: 'Daily'},
-  {id: 2, label: 'Weekly'},
-  {id: 3, label: 'Monthly'},
+    { id: 1, label: 'Daily' },
+    { id: 2, label: 'Weekly' },
+    { id: 3, label: 'Monthly' },
 ];
 
 export function Example() {
-  return (
-    <SelectHorizontal
-      labelText="Frequency"
-      data={data}
-      startPosition={0}
-      onChange={(position, item) => console.log(position, item.label)}
-    />
-  );
+    return (
+        <SelectHorizontal
+            labelText="Frequency"
+            data={data}
+            startPosition={0}
+            onChange={(position, item) => console.log(position, item.label)}
+        />
+    );
 }
 ```
 
 ### Theming
 
-All the values that used to come from `useDimens` and the app color file are now
-props with defaults:
+Every dimension and color is a prop with a constant default, so the component
+adopts your design system:
 
 ```tsx
 <SelectHorizontal
-  data={data}
-  fontSize={18}          // label + value size        (default 18)
-  iconSize={30}          // arrow size                 (default 30)
-  borderRadius={12}      // corner radius of the bar   (default 12)
-  primaryColor="#1D1B48" // bar background + label      (default #1D1B48)
-  accentColor="#FFFFFF"  // value + arrows              (default #FFFFFF)
-  iconColor="#FFFFFF"    // overrides accent for arrows only
-  fontFamily="Sora"
-  labelFontWeight="400"
-  valueFontWeight="600"
+    data={data}
+    fontSize={18}
+    iconSize={25}
+    borderRadius={9}
+    primaryColor="#1D1B48"
+    accentColor="#FFFFFF"
+    iconColor="#FFFFFF"
+    fontFamily="Sora"
+    labelFontWeight="400"
+    valueFontWeight="600"
 />
 ```
 
-The default dimension/color constants are exported if you want to reference
-them:
+Defaults: `fontSize` 18, `iconSize` 25, `borderRadius` 9, `primaryColor`
+`#1D1B48`, `accentColor` `#FFFFFF`. They are also exported if you want to
+reference them:
 
 ```tsx
 import {
-  DEFAULT_FONT_SIZE,
-  DEFAULT_ICON_SIZE,
-  DEFAULT_PRIMARY_COLOR,
-  DEFAULT_ACCENT_COLOR,
+    DEFAULT_ACCENT_COLOR,
+    DEFAULT_BORDER_RADIUS,
+    DEFAULT_FONT_SIZE,
+    DEFAULT_ICON_SIZE,
+    DEFAULT_PRIMARY_COLOR,
 } from 'react-native-select-horizontal';
 ```
 
 ### Custom arrows
 
-By default arrows render as text chevrons (`‹` `›`) so there's no icon
-dependency. Bring your own icon component with the render props:
+By default arrows render as text chevrons (`‹` `›`). Pass any component through
+the render props to bring your own icons (an SVG, an icon font, an emoji…):
 
 ```tsx
-import Icon from 'react-native-vector-icons/Entypo';
-
 <SelectHorizontal
-  data={data}
-  renderLeftIcon={({size, color}) => (
-    <Icon name="chevron-thin-left" size={size} color={color} />
-  )}
-  renderRightIcon={({size, color}) => (
-    <Icon name="chevron-thin-right" size={size} color={color} />
-  )}
+    data={data}
+    renderLeftIcon={({ size, color }) => (
+        <MyChevronLeft
+            size={size}
+            color={color}
+        />
+    )}
+    renderRightIcon={({ size, color }) => (
+        <MyChevronRight
+            size={size}
+            color={color}
+        />
+    )}
 />
 ```
 
@@ -98,8 +108,8 @@ import Icon from 'react-native-vector-icons/Entypo';
 | `labelText`             | `string`                                      | `''`        | Label above the bar. Hidden when empty.       |
 | `onChange`              | `(position: number, item) => void`            | —           | Fired when the selection changes.             |
 | `fontSize`              | `number`                                      | `18`        | Label and value font size.                    |
-| `iconSize`              | `number`                                      | `30`        | Arrow icon size.                              |
-| `borderRadius`          | `number`                                      | `12`        | Corner radius of the selector bar.            |
+| `iconSize`              | `number`                                      | `25`        | Arrow icon size.                              |
+| `borderRadius`          | `number`                                      | `9`         | Corner radius of the selector bar.            |
 | `primaryColor`          | `string`                                      | `#1D1B48`   | Bar background and label color.               |
 | `accentColor`           | `string`                                      | `#FFFFFF`   | Value and arrow color.                        |
 | `iconColor`             | `string`                                      | `accentColor` | Overrides `accentColor` for arrows only.    |

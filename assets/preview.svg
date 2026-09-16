@@ -1,0 +1,22 @@
+<svg width="440" height="312" viewBox="0 0 440 312" fill="none" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <rect width="440" height="312" rx="16" fill="#F7F7FC"/>
+
+  <!-- Row 1: default theme -->
+  <text x="24" y="40" font-size="15" font-weight="600" fill="#1D1B48">Frequency</text>
+  <rect x="24" y="52" width="392" height="52" rx="9" fill="#1D1B48"/>
+  <text x="52" y="78" font-size="28" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">&#8249;</text>
+  <text x="220" y="79" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">Weekly</text>
+  <text x="388" y="78" font-size="28" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">&#8250;</text>
+
+  <!-- Row 2: custom theme -->
+  <text x="24" y="140" font-size="15" font-weight="600" fill="#0E7C66">Plan size</text>
+  <rect x="24" y="152" width="392" height="52" rx="9" fill="#0E7C66"/>
+  <text x="52" y="178" font-size="28" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">&#8249;</text>
+  <text x="220" y="179" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">Medium</text>
+  <text x="388" y="178" font-size="28" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">&#8250;</text>
+
+  <!-- Row 3: no label, at the left end (only the right arrow shows) -->
+  <rect x="24" y="236" width="392" height="52" rx="9" fill="#E02241"/>
+  <text x="220" y="263" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">Small</text>
+  <text x="388" y="262" font-size="28" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">&#8250;</text>
+</svg>

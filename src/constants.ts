@@ -3,9 +3,9 @@ import { Platform } from 'react-native';
 
 export const DEFAULT_FONT_SIZE = 18;
 
-export const DEFAULT_ICON_SIZE = 30;
+export const DEFAULT_ICON_SIZE = 25;
 
-export const DEFAULT_BORDER_RADIUS = 12;
+export const DEFAULT_BORDER_RADIUS = 9;
 
 export const DEFAULT_PRIMARY_COLOR = '#1D1B48';
 
