@@ -65,7 +65,6 @@ export default function App(): React.JSX.Element {
             accentColor="#FFFFFF"
             fontSize={20}
             iconSize={34}
-            labelSpacing={12}
             style={styles.rounded}
           />
         </Section>

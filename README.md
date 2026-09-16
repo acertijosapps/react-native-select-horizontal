@@ -48,7 +48,6 @@ props with defaults:
   data={data}
   fontSize={18}          // label + value size        (default 18)
   iconSize={30}          // arrow size                 (default 30)
-  labelSpacing={9}       // vertical padding of label  (default 9)
   borderRadius={12}      // corner radius of the bar   (default 12)
   primaryColor="#1D1B48" // bar background + label      (default #1D1B48)
   accentColor="#FFFFFF"  // value + arrows              (default #FFFFFF)
@@ -66,7 +65,6 @@ them:
 import {
   DEFAULT_FONT_SIZE,
   DEFAULT_ICON_SIZE,
-  DEFAULT_LABEL_SPACING,
   DEFAULT_PRIMARY_COLOR,
   DEFAULT_ACCENT_COLOR,
 } from 'react-native-select-horizontal';
@@ -101,7 +99,6 @@ import Icon from 'react-native-vector-icons/Entypo';
 | `onChange`              | `(position: number, item) => void`            | —           | Fired when the selection changes.             |
 | `fontSize`              | `number`                                      | `18`        | Label and value font size.                    |
 | `iconSize`              | `number`                                      | `30`        | Arrow icon size.                              |
-| `labelSpacing`          | `number`                                      | `9`         | Vertical padding around the label.            |
 | `borderRadius`          | `number`                                      | `12`        | Corner radius of the selector bar.            |
 | `primaryColor`          | `string`                                      | `#1D1B48`   | Bar background and label color.               |
 | `accentColor`           | `string`                                      | `#FFFFFF`   | Value and arrow color.                        |

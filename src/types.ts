@@ -41,8 +41,6 @@ export interface SelectHorizontalProps<T extends SelectHorizontalItem = SelectHo
     fontSize?: number;
     /** Arrow icon size. Default `30`. */
     iconSize?: number;
-    /** Vertical padding around the label. Default `9`. */
-    labelSpacing?: number;
     /** Corner radius of the selector bar. Default `12`. */
     borderRadius?: number;
 
