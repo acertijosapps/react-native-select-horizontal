@@ -17,6 +17,14 @@
     "android",
     "ios"
   ],
+  "homepage": "https://gitlab.com/acertijoslibs/rnselecthorizontal#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/acertijoslibs/rnselecthorizontal.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/acertijoslibs/rnselecthorizontal/-/issues"
+  },
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
   "types": "lib/typescript/index.d.ts",
