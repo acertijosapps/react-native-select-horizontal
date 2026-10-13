@@ -1,6 +1,6 @@
 {
   "name": "@acertijosapps/react-native-select-horizontal",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A sleek, mobile-first alternative to the traditional dropdown for React Native. Instead of opening a menu, users step through options inline with left/right arrows — optimized for touch, dependency-free and fully themeable (colors, fonts, sizes and custom icons).",
   "keywords": [
     "react-native",
@@ -17,7 +17,8 @@
     "android",
     "ios"
   ],
-  "homepage": "https://gitlab.com/acertijoslibs/rnselecthorizontal#readme",
+  "homepage": "https://acertijosapps.com/librerias/react-native-select-horizontal",
+  "author": "AcertijosApps <acertijos.contacto@gmail.com>",
   "repository": {
     "type": "git",
     "url": "git+https://gitlab.com/acertijoslibs/rnselecthorizontal.git"
