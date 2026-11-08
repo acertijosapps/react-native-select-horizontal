@@ -7,9 +7,20 @@ import {
     DEFAULT_FONT_SIZE,
     DEFAULT_ICON_SIZE,
     DEFAULT_PRIMARY_COLOR,
+    DISABLED_ARROW_OPACITY,
     FONT_WEIGHT,
 } from './constants';
 import type { ArrowRenderProps, SelectHorizontalItem, SelectHorizontalProps } from './types';
+
+type ArrowDirection = 'left' | 'right';
+
+interface ArrowSlotOptions {
+    direction: ArrowDirection;
+    isEnabled: boolean;
+    slotTestID: string;
+    render: ((arrowProps: ArrowRenderProps) => React.ReactNode) | undefined;
+    onPress: () => void;
+}
 
 function SelectHorizontal<T extends SelectHorizontalItem>(
     props: SelectHorizontalProps<T>,
@@ -18,6 +29,8 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
         data = [],
         selectedIndex,
         startPosition = 0,
+        isLoopEnabled = false,
+        arrowVisibility = 'hide',
         labelText = '',
         onChange,
         fontSize = DEFAULT_FONT_SIZE,
@@ -45,20 +58,26 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
     const position = isControlled ? selectedIndex : internalPosition;
     const lastIndex = data.length - 1;
     const actualPosition = Math.min(Math.max(position, 0), Math.max(lastIndex, 0));
-    const isLeftVisible = actualPosition > 0;
-    const isRightVisible = actualPosition < lastIndex;
+    const hasSeveralItems = data.length > 1;
+    const canGoPrevious = isLoopEnabled ? hasSeveralItems : actualPosition > 0;
+    const canGoNext = isLoopEnabled ? hasSeveralItems : actualPosition < lastIndex;
     const arrowSlotSize = iconSize * 2;
+    const arrowSlotStyle = { height: arrowSlotSize, width: arrowSlotSize };
     const resolvedIconColor = iconColor ?? accentColor;
     const isLabelVisible = !!labelText && labelText.trim() !== '';
     const leftTestID = testID ? `${testID}-left` : 'btnLeft';
     const rightTestID = testID ? `${testID}-right` : 'btnRight';
 
     const handleStep = (step: number) => {
-        const newPosition = actualPosition + step;
+        const canStep = step < 0 ? canGoPrevious : canGoNext;
 
-        if (newPosition < 0 || newPosition > lastIndex) {
+        if (!canStep) {
             return;
         }
+
+        const newPosition = isLoopEnabled
+            ? (actualPosition + step + data.length) % data.length
+            : actualPosition + step;
 
         if (!isControlled) {
             setInternalPosition(newPosition);
@@ -72,11 +91,12 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
     const handlePlus = () => handleStep(1);
 
     const renderArrow = (
-        direction: 'left' | 'right',
+        direction: ArrowDirection,
+        isDisabled: boolean,
         render: ((arrowProps: ArrowRenderProps) => React.ReactNode) | undefined,
     ) => {
         if (render) {
-            return render({ size: iconSize, color: resolvedIconColor, isDisabled: false });
+            return render({ size: iconSize, color: resolvedIconColor, isDisabled });
         }
 
         return (
@@ -93,6 +113,30 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
             >
                 {direction === 'left' ? '‹' : '›'}
             </Text>
+        );
+    };
+
+    const renderArrowSlot = ({
+        direction,
+        isEnabled,
+        slotTestID,
+        render,
+        onPress,
+    }: ArrowSlotOptions) => {
+        if (!isEnabled && arrowVisibility === 'hide') {
+            return <View style={arrowSlotStyle} />;
+        }
+
+        return (
+            <TouchableOpacity
+                testID={slotTestID}
+                disabled={!isEnabled}
+                activeOpacity={0.6}
+                style={[styles.button, arrowSlotStyle, !isEnabled && styles.buttonDisabled]}
+                onPress={onPress}
+            >
+                {renderArrow(direction, !isEnabled, render)}
+            </TouchableOpacity>
         );
     };
 
@@ -120,18 +164,13 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
             <View
                 style={[styles.container, { backgroundColor: primaryColor, borderRadius }, style]}
             >
-                {isLeftVisible ? (
-                    <TouchableOpacity
-                        testID={leftTestID}
-                        activeOpacity={0.6}
-                        style={[styles.button, { height: arrowSlotSize, width: arrowSlotSize }]}
-                        onPress={handleMinus}
-                    >
-                        {renderArrow('left', renderLeftIcon)}
-                    </TouchableOpacity>
-                ) : (
-                    <View style={{ height: arrowSlotSize, width: arrowSlotSize }} />
-                )}
+                {renderArrowSlot({
+                    direction: 'left',
+                    isEnabled: canGoPrevious,
+                    slotTestID: leftTestID,
+                    render: renderLeftIcon,
+                    onPress: handleMinus,
+                })}
 
                 <Text
                     numberOfLines={1}
@@ -150,18 +189,13 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
                     {data[actualPosition]?.label}
                 </Text>
 
-                {isRightVisible ? (
-                    <TouchableOpacity
-                        testID={rightTestID}
-                        activeOpacity={0.6}
-                        style={[styles.button, { height: arrowSlotSize, width: arrowSlotSize }]}
-                        onPress={handlePlus}
-                    >
-                        {renderArrow('right', renderRightIcon)}
-                    </TouchableOpacity>
-                ) : (
-                    <View style={{ height: arrowSlotSize, width: arrowSlotSize }} />
-                )}
+                {renderArrowSlot({
+                    direction: 'right',
+                    isEnabled: canGoNext,
+                    slotTestID: rightTestID,
+                    render: renderRightIcon,
+                    onPress: handlePlus,
+                })}
             </View>
         </View>
     );
@@ -176,6 +210,9 @@ const styles = StyleSheet.create({
     button: {
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    buttonDisabled: {
+        opacity: DISABLED_ARROW_OPACITY,
     },
     txtBody: {
         flex: 1,

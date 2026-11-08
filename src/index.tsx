@@ -6,9 +6,15 @@ export {
     DEFAULT_FONT_SIZE,
     DEFAULT_ICON_SIZE,
     DEFAULT_PRIMARY_COLOR,
+    DISABLED_ARROW_OPACITY,
     FONT_WEIGHT,
 } from './constants';
 export { SelectHorizontal };
-export type { ArrowRenderProps, SelectHorizontalItem, SelectHorizontalProps } from './types';
+export type {
+    ArrowRenderProps,
+    ArrowVisibility,
+    SelectHorizontalItem,
+    SelectHorizontalProps,
+} from './types';
 
 export default SelectHorizontal;

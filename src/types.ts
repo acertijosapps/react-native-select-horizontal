@@ -15,6 +15,12 @@ export interface SelectHorizontalItem {
     label: string;
 }
 
+/**
+ * What to do with an arrow that has no step in its direction: `'hide'` leaves its slot
+ * empty and `'disable'` keeps it visible, dimmed and not pressable.
+ */
+export type ArrowVisibility = 'hide' | 'disable';
+
 /** Info passed to the custom arrow renderers. */
 export interface ArrowRenderProps {
     /** Icon size resolved from the `iconSize` prop (or its default). */
@@ -22,8 +28,8 @@ export interface ArrowRenderProps {
     /** Icon color resolved from `iconColor` / `accentColor` (or its default). */
     color: string;
     /**
-     * Always `false` for now: when there is no step in a direction its arrow is hidden
-     * instead of rendered disabled.
+     * Whether the arrow has no step in its direction. Only `true` with
+     * `arrowVisibility="disable"`; with `'hide'` such an arrow is not rendered.
      */
     isDisabled: boolean;
 }
@@ -40,6 +46,10 @@ export interface SelectHorizontalProps<T extends SelectHorizontalItem = SelectHo
     selectedIndex?: number;
     /** Index selected on mount when `selectedIndex` is not set. Defaults to `0`. */
     startPosition?: number;
+    /** Wrap from the last option to the first and back. Default `false`. */
+    isLoopEnabled?: boolean;
+    /** Hide or disable the arrow that has no step in its direction. Default `'hide'`. */
+    arrowVisibility?: ArrowVisibility;
     /** Optional label rendered above the selector. Hidden when empty. */
     labelText?: string;
 

@@ -11,6 +11,8 @@ export const DEFAULT_PRIMARY_COLOR = '#1D1B48';
 
 export const DEFAULT_ACCENT_COLOR = '#FFFFFF';
 
+export const DISABLED_ARROW_OPACITY = 0.3;
+
 export const FONT_WEIGHT: {
     NORMAL: TextStyle['fontWeight'];
     BOLD: TextStyle['fontWeight'];
