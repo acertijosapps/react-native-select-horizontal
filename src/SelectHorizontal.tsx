@@ -16,6 +16,7 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
 ): React.JSX.Element {
     const {
         data = [],
+        selectedIndex,
         startPosition = 0,
         labelText = '',
         onChange,
@@ -38,8 +39,10 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
         testID,
     } = props;
 
-    const [position, setPosition] = useState<number>(startPosition);
+    const [internalPosition, setInternalPosition] = useState<number>(startPosition);
 
+    const isControlled = selectedIndex !== undefined;
+    const position = isControlled ? selectedIndex : internalPosition;
     const lastIndex = data.length - 1;
     const actualPosition = Math.min(Math.max(position, 0), Math.max(lastIndex, 0));
     const isLeftVisible = actualPosition > 0;
@@ -57,7 +60,9 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
             return;
         }
 
-        setPosition(newPosition);
+        if (!isControlled) {
+            setInternalPosition(newPosition);
+        }
 
         onChange?.(newPosition, data[newPosition]);
     };

@@ -32,7 +32,13 @@ export interface SelectHorizontalProps<T extends SelectHorizontalItem = SelectHo
     /** Options to page through. */
     data: T[];
 
-    /** Index selected on mount. Defaults to `0`. */
+    /**
+     * Selected index for controlled usage. When set, the component shows this index and
+     * only reports steps through `onChange`; update it from there. Out-of-range values are
+     * clamped to `data`.
+     */
+    selectedIndex?: number;
+    /** Index selected on mount when `selectedIndex` is not set. Defaults to `0`. */
     startPosition?: number;
     /** Optional label rendered above the selector. Hidden when empty. */
     labelText?: string;
