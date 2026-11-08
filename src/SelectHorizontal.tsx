@@ -1,23 +1,45 @@
 import React, { useState } from 'react';
+import type { AccessibilityActionEvent } from 'react-native';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import {
+    ACCESSIBILITY_ACTIONS,
     DEFAULT_ACCENT_COLOR,
     DEFAULT_BORDER_RADIUS,
     DEFAULT_FONT_SIZE,
     DEFAULT_ICON_SIZE,
+    DEFAULT_NEXT_ACCESSIBILITY_LABEL,
+    DEFAULT_PREVIOUS_ACCESSIBILITY_LABEL,
     DEFAULT_PRIMARY_COLOR,
+    DISABLED_ARROW_OPACITY,
     FONT_WEIGHT,
 } from './constants';
 import type { ArrowRenderProps, SelectHorizontalItem, SelectHorizontalProps } from './types';
+
+type ArrowDirection = 'left' | 'right';
+
+interface ArrowSlotOptions {
+    direction: ArrowDirection;
+    isEnabled: boolean;
+    slotTestID: string;
+    accessibilityLabel: string;
+    render: ((arrowProps: ArrowRenderProps) => React.ReactNode) | undefined;
+    onPress: () => void;
+}
 
 function SelectHorizontal<T extends SelectHorizontalItem>(
     props: SelectHorizontalProps<T>,
 ): React.JSX.Element {
     const {
         data = [],
+        selectedIndex,
         startPosition = 0,
+        isLoopEnabled = false,
+        arrowVisibility = 'hide',
         labelText = '',
+        accessibilityLabel,
+        previousAccessibilityLabel = DEFAULT_PREVIOUS_ACCESSIBILITY_LABEL,
+        nextAccessibilityLabel = DEFAULT_NEXT_ACCESSIBILITY_LABEL,
         onChange,
         fontSize = DEFAULT_FONT_SIZE,
         iconSize = DEFAULT_ICON_SIZE,
@@ -38,26 +60,38 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
         testID,
     } = props;
 
-    const [position, setPosition] = useState<number>(startPosition);
+    const [internalPosition, setInternalPosition] = useState<number>(startPosition);
 
+    const isControlled = selectedIndex !== undefined;
+    const position = isControlled ? selectedIndex : internalPosition;
     const lastIndex = data.length - 1;
     const actualPosition = Math.min(Math.max(position, 0), Math.max(lastIndex, 0));
-    const isLeftVisible = actualPosition > 0;
-    const isRightVisible = actualPosition < lastIndex;
+    const hasSeveralItems = data.length > 1;
+    const canGoPrevious = isLoopEnabled ? hasSeveralItems : actualPosition > 0;
+    const canGoNext = isLoopEnabled ? hasSeveralItems : actualPosition < lastIndex;
     const arrowSlotSize = iconSize * 2;
+    const arrowSlotStyle = { height: arrowSlotSize, width: arrowSlotSize };
     const resolvedIconColor = iconColor ?? accentColor;
     const isLabelVisible = !!labelText && labelText.trim() !== '';
+    const selectedLabel = data[actualPosition]?.label ?? '';
+    const barAccessibilityLabel = accessibilityLabel ?? (isLabelVisible ? labelText : undefined);
     const leftTestID = testID ? `${testID}-left` : 'btnLeft';
     const rightTestID = testID ? `${testID}-right` : 'btnRight';
 
     const handleStep = (step: number) => {
-        const newPosition = actualPosition + step;
+        const canStep = step < 0 ? canGoPrevious : canGoNext;
 
-        if (newPosition < 0 || newPosition > lastIndex) {
+        if (!canStep) {
             return;
         }
 
-        setPosition(newPosition);
+        const newPosition = isLoopEnabled
+            ? (actualPosition + step + data.length) % data.length
+            : actualPosition + step;
+
+        if (!isControlled) {
+            setInternalPosition(newPosition);
+        }
 
         onChange?.(newPosition, data[newPosition]);
     };
@@ -66,12 +100,23 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
 
     const handlePlus = () => handleStep(1);
 
+    const handleAccessibilityAction = (event: AccessibilityActionEvent) => {
+        if (event.nativeEvent.actionName === 'increment') {
+            handlePlus();
+        }
+
+        if (event.nativeEvent.actionName === 'decrement') {
+            handleMinus();
+        }
+    };
+
     const renderArrow = (
-        direction: 'left' | 'right',
+        direction: ArrowDirection,
+        isDisabled: boolean,
         render: ((arrowProps: ArrowRenderProps) => React.ReactNode) | undefined,
     ) => {
         if (render) {
-            return render({ size: iconSize, color: resolvedIconColor, isDisabled: false });
+            return render({ size: iconSize, color: resolvedIconColor, isDisabled });
         }
 
         return (
@@ -88,6 +133,34 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
             >
                 {direction === 'left' ? '‹' : '›'}
             </Text>
+        );
+    };
+
+    const renderArrowSlot = ({
+        direction,
+        isEnabled,
+        slotTestID,
+        accessibilityLabel: slotAccessibilityLabel,
+        render,
+        onPress,
+    }: ArrowSlotOptions) => {
+        if (!isEnabled && arrowVisibility === 'hide') {
+            return <View style={arrowSlotStyle} />;
+        }
+
+        return (
+            <TouchableOpacity
+                testID={slotTestID}
+                accessibilityRole="button"
+                accessibilityLabel={slotAccessibilityLabel}
+                accessibilityState={{ disabled: !isEnabled }}
+                disabled={!isEnabled}
+                activeOpacity={0.6}
+                style={[styles.button, arrowSlotStyle, !isEnabled && styles.buttonDisabled]}
+                onPress={onPress}
+            >
+                {renderArrow(direction, !isEnabled, render)}
+            </TouchableOpacity>
         );
     };
 
@@ -113,20 +186,22 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
             ) : null}
 
             <View
+                accessible
+                accessibilityRole="adjustable"
+                accessibilityLabel={barAccessibilityLabel}
+                accessibilityValue={{ text: selectedLabel }}
+                accessibilityActions={ACCESSIBILITY_ACTIONS}
                 style={[styles.container, { backgroundColor: primaryColor, borderRadius }, style]}
+                onAccessibilityAction={handleAccessibilityAction}
             >
-                {isLeftVisible ? (
-                    <TouchableOpacity
-                        testID={leftTestID}
-                        activeOpacity={0.6}
-                        style={[styles.button, { height: arrowSlotSize, width: arrowSlotSize }]}
-                        onPress={handleMinus}
-                    >
-                        {renderArrow('left', renderLeftIcon)}
-                    </TouchableOpacity>
-                ) : (
-                    <View style={{ height: arrowSlotSize, width: arrowSlotSize }} />
-                )}
+                {renderArrowSlot({
+                    direction: 'left',
+                    isEnabled: canGoPrevious,
+                    slotTestID: leftTestID,
+                    accessibilityLabel: previousAccessibilityLabel,
+                    render: renderLeftIcon,
+                    onPress: handleMinus,
+                })}
 
                 <Text
                     numberOfLines={1}
@@ -142,21 +217,17 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
                         valueStyle,
                     ]}
                 >
-                    {data[actualPosition]?.label}
+                    {selectedLabel}
                 </Text>
 
-                {isRightVisible ? (
-                    <TouchableOpacity
-                        testID={rightTestID}
-                        activeOpacity={0.6}
-                        style={[styles.button, { height: arrowSlotSize, width: arrowSlotSize }]}
-                        onPress={handlePlus}
-                    >
-                        {renderArrow('right', renderRightIcon)}
-                    </TouchableOpacity>
-                ) : (
-                    <View style={{ height: arrowSlotSize, width: arrowSlotSize }} />
-                )}
+                {renderArrowSlot({
+                    direction: 'right',
+                    isEnabled: canGoNext,
+                    slotTestID: rightTestID,
+                    accessibilityLabel: nextAccessibilityLabel,
+                    render: renderRightIcon,
+                    onPress: handlePlus,
+                })}
             </View>
         </View>
     );
@@ -171,6 +242,9 @@ const styles = StyleSheet.create({
     button: {
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    buttonDisabled: {
+        opacity: DISABLED_ARROW_OPACITY,
     },
     txtBody: {
         flex: 1,
