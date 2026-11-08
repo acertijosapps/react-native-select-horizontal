@@ -9,7 +9,7 @@ system: colors, sizes, fonts and even custom arrow icons.
 **Zero runtime dependencies.** Only `react` and `react-native` as peers.
 
 <p align="center">
-  <img src="https://gitlab.com/acertijoslibs/rnselecthorizontal/-/raw/main/assets/preview.png" alt="SelectHorizontal preview" width="360" />
+  <img src="https://raw.githubusercontent.com/acertijosapps/react-native-select-horizontal/main/assets/preview.png" alt="SelectHorizontal preview" width="360" />
 </p>
 
 ## Install
