@@ -47,6 +47,8 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
     const arrowSlotSize = iconSize * 2;
     const resolvedIconColor = iconColor ?? accentColor;
     const isLabelVisible = !!labelText && labelText.trim() !== '';
+    const leftTestID = testID ? `${testID}-left` : 'btnLeft';
+    const rightTestID = testID ? `${testID}-right` : 'btnRight';
 
     const handleStep = (step: number) => {
         const newPosition = actualPosition + step;
@@ -115,7 +117,7 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
             >
                 {isLeftVisible ? (
                     <TouchableOpacity
-                        testID="btnLeft"
+                        testID={leftTestID}
                         activeOpacity={0.6}
                         style={[styles.button, { height: arrowSlotSize, width: arrowSlotSize }]}
                         onPress={handleMinus}
@@ -145,7 +147,7 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
 
                 {isRightVisible ? (
                     <TouchableOpacity
-                        testID="btnRight"
+                        testID={rightTestID}
                         activeOpacity={0.6}
                         style={[styles.button, { height: arrowSlotSize, width: arrowSlotSize }]}
                         onPress={handlePlus}

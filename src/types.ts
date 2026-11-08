@@ -74,6 +74,9 @@ export interface SelectHorizontalProps<T extends SelectHorizontalItem = SelectHo
     /** Extra style for the default chevron glyphs. Ignored when `renderLeftIcon`/`renderRightIcon` are set. */
     iconStyle?: TextStyle;
 
-    /** testID for the root view. */
+    /**
+     * testID for the root view. The arrows get `${testID}-left` and `${testID}-right`;
+     * without a testID they keep `btnLeft` and `btnRight`.
+     */
     testID?: string;
 }
