@@ -21,7 +21,10 @@ export interface ArrowRenderProps {
     size: number;
     /** Icon color resolved from `iconColor` / `accentColor` (or its default). */
     color: string;
-    /** Whether the arrow is currently disabled (no step in that direction). */
+    /**
+     * Always `false` for now: when there is no step in a direction its arrow is hidden
+     * instead of rendered disabled.
+     */
     isDisabled: boolean;
 }
 
@@ -39,9 +42,9 @@ export interface SelectHorizontalProps<T extends SelectHorizontalItem = SelectHo
 
     /** Font size for the label and the selected value. Default `18`. */
     fontSize?: number;
-    /** Arrow icon size. Default `30`. */
+    /** Arrow icon size. Default `25`. */
     iconSize?: number;
-    /** Corner radius of the selector bar. Default `12`. */
+    /** Corner radius of the selector bar. Default `9`. */
     borderRadius?: number;
 
     /** Bar background + label color. Default `#1D1B48`. */
