@@ -11,6 +11,17 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 ### Changed
 
 - El repositorio se movió a GitHub: [acertijosapps/react-native-select-horizontal](https://github.com/acertijosapps/react-native-select-horizontal). `repository`, `bugs` y la imagen del README apuntan ahí.
+- Con `testID`, las flechas usan `${testID}-left` y `${testID}-right`; sin él conservan `btnLeft` y `btnRight`.
+- `package.json` declara `exports` (`source`, `types`, `react-native`, `import`, `require`) y `sideEffects: false`.
+- `prepublishOnly` corre typecheck, lint y format:check antes de publicar, y solo `lib/typescript` lleva los `.d.ts`.
+
+### Fixed
+
+- Las flechas se derivan de la posición actual: si `data` llega vacío y se carga después, la flecha derecha aparece.
+- La posición se acota al rango de `data`: un `startPosition` fuera de rango muestra el último elemento en vez de quedar vacío.
+- El JSDoc mostraba defaults incorrectos para `iconSize` (30) y `borderRadius` (12); los reales son 25 y 9.
+- `ArrowRenderProps.isDisabled` documenta que siempre llega en `false`: la flecha sin paso se oculta.
+- El example no cargaba en Metro por los `paths` de su `tsconfig.json`; se desactivó `experiments.tsconfigPaths`.
 
 ## [1.0.3] - 2026-10-12
 
