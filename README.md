@@ -124,7 +124,7 @@ the render props to bring your own icons (an SVG, an icon font, an emoji…):
 | `labelStyle`            | `TextStyle`                                   | —           | Extra label style.                            |
 | `valueStyle`            | `TextStyle`                                   | —           | Extra value style.                            |
 | `iconStyle`             | `TextStyle`                                   | —           | Style for the default chevrons (ignored with custom render). |
-| `testID`                | `string`                                      | —           | testID for the root view.                     |
+| `testID`                | `string`                                      | —           | testID for the root view. Arrows get `${testID}-left` / `${testID}-right` (`btnLeft` / `btnRight` without it). |
 
 ## Example
 

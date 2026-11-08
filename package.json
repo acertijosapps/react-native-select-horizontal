@@ -31,6 +31,17 @@
   "types": "lib/typescript/index.d.ts",
   "react-native": "src/index.tsx",
   "source": "src/index.tsx",
+  "exports": {
+    ".": {
+      "source": "./src/index.tsx",
+      "types": "./lib/typescript/index.d.ts",
+      "react-native": "./src/index.tsx",
+      "import": "./lib/module/index.js",
+      "require": "./lib/commonjs/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
   "files": [
     "src",
     "lib",
@@ -39,9 +50,9 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "yarn build:cjs && yarn build:module && yarn build:types",
-    "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir lib/commonjs",
-    "build:module": "tsc --project tsconfig.build.json --module esnext --outDir lib/module",
+    "build": "yarn clean && yarn build:cjs && yarn build:module && yarn build:types",
+    "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir lib/commonjs --declaration false",
+    "build:module": "tsc --project tsconfig.build.json --module esnext --outDir lib/module --declaration false",
     "build:types": "tsc --project tsconfig.build.json --declaration --emitDeclarationOnly --outDir lib/typescript",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
@@ -49,7 +60,8 @@
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
     "prepare": "yarn build",
-    "clean": "rm -rf lib"
+    "clean": "rm -rf lib",
+    "prepublishOnly": "yarn typecheck && yarn lint && yarn format:check"
   },
   "license": "MIT",
   "peerDependencies": {

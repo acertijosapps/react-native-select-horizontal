@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {StatusBar} from 'expo-status-bar';
 
@@ -40,6 +40,13 @@ function Section({title, children}: {title: string; children: React.ReactNode}) 
 
 export default function App(): React.JSX.Element {
   const [selected, setSelected] = useState('Daily');
+  const [asyncData, setAsyncData] = useState<SelectHorizontalItem[]>([]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setAsyncData(FREQUENCY), 1500);
+
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -90,6 +97,22 @@ export default function App(): React.JSX.Element {
             primaryColor="#E02241"
             accentColor="#FFFFFF"
             style={styles.rounded}
+          />
+        </Section>
+
+        <Section title="Async data (loads after 1.5 s)">
+          <SelectHorizontal
+            labelText={asyncData.length ? 'Loaded' : 'Loading…'}
+            data={asyncData}
+            testID="async"
+          />
+        </Section>
+
+        <Section title="startPosition out of range (99)">
+          <SelectHorizontal
+            data={SIZES}
+            startPosition={99}
+            primaryColor="#0E7C66"
           />
         </Section>
 
