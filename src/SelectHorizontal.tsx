@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+import type { AccessibilityActionEvent } from 'react-native';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import {
+    ACCESSIBILITY_ACTIONS,
     DEFAULT_ACCENT_COLOR,
     DEFAULT_BORDER_RADIUS,
     DEFAULT_FONT_SIZE,
     DEFAULT_ICON_SIZE,
+    DEFAULT_NEXT_ACCESSIBILITY_LABEL,
+    DEFAULT_PREVIOUS_ACCESSIBILITY_LABEL,
     DEFAULT_PRIMARY_COLOR,
     DISABLED_ARROW_OPACITY,
     FONT_WEIGHT,
@@ -18,6 +22,7 @@ interface ArrowSlotOptions {
     direction: ArrowDirection;
     isEnabled: boolean;
     slotTestID: string;
+    accessibilityLabel: string;
     render: ((arrowProps: ArrowRenderProps) => React.ReactNode) | undefined;
     onPress: () => void;
 }
@@ -32,6 +37,9 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
         isLoopEnabled = false,
         arrowVisibility = 'hide',
         labelText = '',
+        accessibilityLabel,
+        previousAccessibilityLabel = DEFAULT_PREVIOUS_ACCESSIBILITY_LABEL,
+        nextAccessibilityLabel = DEFAULT_NEXT_ACCESSIBILITY_LABEL,
         onChange,
         fontSize = DEFAULT_FONT_SIZE,
         iconSize = DEFAULT_ICON_SIZE,
@@ -65,6 +73,8 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
     const arrowSlotStyle = { height: arrowSlotSize, width: arrowSlotSize };
     const resolvedIconColor = iconColor ?? accentColor;
     const isLabelVisible = !!labelText && labelText.trim() !== '';
+    const selectedLabel = data[actualPosition]?.label ?? '';
+    const barAccessibilityLabel = accessibilityLabel ?? (isLabelVisible ? labelText : undefined);
     const leftTestID = testID ? `${testID}-left` : 'btnLeft';
     const rightTestID = testID ? `${testID}-right` : 'btnRight';
 
@@ -89,6 +99,16 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
     const handleMinus = () => handleStep(-1);
 
     const handlePlus = () => handleStep(1);
+
+    const handleAccessibilityAction = (event: AccessibilityActionEvent) => {
+        if (event.nativeEvent.actionName === 'increment') {
+            handlePlus();
+        }
+
+        if (event.nativeEvent.actionName === 'decrement') {
+            handleMinus();
+        }
+    };
 
     const renderArrow = (
         direction: ArrowDirection,
@@ -120,6 +140,7 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
         direction,
         isEnabled,
         slotTestID,
+        accessibilityLabel: slotAccessibilityLabel,
         render,
         onPress,
     }: ArrowSlotOptions) => {
@@ -130,6 +151,9 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
         return (
             <TouchableOpacity
                 testID={slotTestID}
+                accessibilityRole="button"
+                accessibilityLabel={slotAccessibilityLabel}
+                accessibilityState={{ disabled: !isEnabled }}
                 disabled={!isEnabled}
                 activeOpacity={0.6}
                 style={[styles.button, arrowSlotStyle, !isEnabled && styles.buttonDisabled]}
@@ -162,12 +186,19 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
             ) : null}
 
             <View
+                accessible
+                accessibilityRole="adjustable"
+                accessibilityLabel={barAccessibilityLabel}
+                accessibilityValue={{ text: selectedLabel }}
+                accessibilityActions={ACCESSIBILITY_ACTIONS}
                 style={[styles.container, { backgroundColor: primaryColor, borderRadius }, style]}
+                onAccessibilityAction={handleAccessibilityAction}
             >
                 {renderArrowSlot({
                     direction: 'left',
                     isEnabled: canGoPrevious,
                     slotTestID: leftTestID,
+                    accessibilityLabel: previousAccessibilityLabel,
                     render: renderLeftIcon,
                     onPress: handleMinus,
                 })}
@@ -186,13 +217,14 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
                         valueStyle,
                     ]}
                 >
-                    {data[actualPosition]?.label}
+                    {selectedLabel}
                 </Text>
 
                 {renderArrowSlot({
                     direction: 'right',
                     isEnabled: canGoNext,
                     slotTestID: rightTestID,
+                    accessibilityLabel: nextAccessibilityLabel,
                     render: renderRightIcon,
                     onPress: handlePlus,
                 })}

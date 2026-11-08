@@ -52,6 +52,16 @@ export interface SelectHorizontalProps<T extends SelectHorizontalItem = SelectHo
     arrowVisibility?: ArrowVisibility;
     /** Optional label rendered above the selector. Hidden when empty. */
     labelText?: string;
+    /**
+     * Screen reader label of the selector bar, an adjustable element that announces the
+     * selected option and steps with swipe up/down (VoiceOver) or the adjust gestures
+     * (TalkBack). Defaults to `labelText`.
+     */
+    accessibilityLabel?: string;
+    /** Screen reader label of the left arrow. Default `'Previous'`. */
+    previousAccessibilityLabel?: string;
+    /** Screen reader label of the right arrow. Default `'Next'`. */
+    nextAccessibilityLabel?: string;
 
     /** Fired whenever the selection changes. */
     onChange?: (newPosition: number, selectedValue: T) => void;
