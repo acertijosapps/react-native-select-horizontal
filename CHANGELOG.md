@@ -6,6 +6,22 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-08
+
+### Added
+
+- Modo controlado con `selectedIndex`: el componente muestra ese índice y solo reporta los pasos por `onChange`.
+- `isLoopEnabled`: del último elemento vuelve al primero y al revés.
+- `arrowVisibility` (`'hide'` | `'disable'`): la flecha sin paso se oculta (default) o queda visible, atenuada y sin respuesta; `ArrowRenderProps.isDisabled` llega en `true` en ese caso. Se exportan el tipo `ArrowVisibility` y `DISABLED_ARROW_OPACITY`.
+- Accesibilidad: la barra es un elemento `adjustable` que anuncia la opción seleccionada y avanza con `increment` / `decrement`. Props `accessibilityLabel` (default `labelText`), `previousAccessibilityLabel` y `nextAccessibilityLabel` (default `'Previous'` / `'Next'`, exportados como `DEFAULT_PREVIOUS_ACCESSIBILITY_LABEL` y `DEFAULT_NEXT_ACCESSIBILITY_LABEL`).
+- Suite de Jest con Testing Library; corre en el CI y en `prepublishOnly`.
+- ESLint y Prettier en `example/`, también en el CI.
+
+### Changed
+
+- Las props de estilo aceptan `StyleProp<ViewStyle>` / `StyleProp<TextStyle>`.
+- README en español, con la página de la librería y la sección Autor.
+
 ## [1.0.4] - 2026-11-08
 
 ### Changed

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { TextStyle, ViewStyle } from 'react-native';
+import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 /**
  * Excepción declarada a Code Style §10 ("sin comentarios"): este archivo describe
@@ -15,6 +15,12 @@ export interface SelectHorizontalItem {
     label: string;
 }
 
+/**
+ * What to do with an arrow that has no step in its direction: `'hide'` leaves its slot
+ * empty and `'disable'` keeps it visible, dimmed and not pressable.
+ */
+export type ArrowVisibility = 'hide' | 'disable';
+
 /** Info passed to the custom arrow renderers. */
 export interface ArrowRenderProps {
     /** Icon size resolved from the `iconSize` prop (or its default). */
@@ -22,8 +28,8 @@ export interface ArrowRenderProps {
     /** Icon color resolved from `iconColor` / `accentColor` (or its default). */
     color: string;
     /**
-     * Always `false` for now: when there is no step in a direction its arrow is hidden
-     * instead of rendered disabled.
+     * Whether the arrow has no step in its direction. Only `true` with
+     * `arrowVisibility="disable"`; with `'hide'` such an arrow is not rendered.
      */
     isDisabled: boolean;
 }
@@ -32,10 +38,30 @@ export interface SelectHorizontalProps<T extends SelectHorizontalItem = SelectHo
     /** Options to page through. */
     data: T[];
 
-    /** Index selected on mount. Defaults to `0`. */
+    /**
+     * Selected index for controlled usage. When set, the component shows this index and
+     * only reports steps through `onChange`; update it from there. Out-of-range values are
+     * clamped to `data`.
+     */
+    selectedIndex?: number;
+    /** Index selected on mount when `selectedIndex` is not set. Defaults to `0`. */
     startPosition?: number;
+    /** Wrap from the last option to the first and back. Default `false`. */
+    isLoopEnabled?: boolean;
+    /** Hide or disable the arrow that has no step in its direction. Default `'hide'`. */
+    arrowVisibility?: ArrowVisibility;
     /** Optional label rendered above the selector. Hidden when empty. */
     labelText?: string;
+    /**
+     * Screen reader label of the selector bar, an adjustable element that announces the
+     * selected option and steps with swipe up/down (VoiceOver) or the adjust gestures
+     * (TalkBack). Defaults to `labelText`.
+     */
+    accessibilityLabel?: string;
+    /** Screen reader label of the left arrow. Default `'Previous'`. */
+    previousAccessibilityLabel?: string;
+    /** Screen reader label of the right arrow. Default `'Next'`. */
+    nextAccessibilityLabel?: string;
 
     /** Fired whenever the selection changes. */
     onChange?: (newPosition: number, selectedValue: T) => void;
@@ -67,15 +93,15 @@ export interface SelectHorizontalProps<T extends SelectHorizontalItem = SelectHo
     renderRightIcon?: (props: ArrowRenderProps) => ReactNode;
 
     /** Style for the outer wrapper (label + bar). */
-    contentContainerStyle?: ViewStyle;
+    contentContainerStyle?: StyleProp<ViewStyle>;
     /** Style for the selector bar (the row with arrows and value). */
-    style?: ViewStyle;
+    style?: StyleProp<ViewStyle>;
     /** Extra style for the label text. */
-    labelStyle?: TextStyle;
+    labelStyle?: StyleProp<TextStyle>;
     /** Extra style for the selected value text. */
-    valueStyle?: TextStyle;
+    valueStyle?: StyleProp<TextStyle>;
     /** Extra style for the default chevron glyphs. Ignored when `renderLeftIcon`/`renderRightIcon` are set. */
-    iconStyle?: TextStyle;
+    iconStyle?: StyleProp<TextStyle>;
 
     /**
      * testID for the root view. The arrows get `${testID}-left` and `${testID}-right`;

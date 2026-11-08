@@ -26,6 +26,9 @@
   "exclude": [
     "node_modules",
     "../node_modules",
-    "../lib"
+    "../lib",
+    "../src/**/__tests__",
+    "../src/**/*.test.ts",
+    "../src/**/*.test.tsx"
   ]
 }
