@@ -1,6 +1,6 @@
 {
   "name": "@acertijosapps/react-native-select-horizontal",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "A sleek, mobile-first alternative to the traditional dropdown for React Native. Instead of opening a menu, users step through options inline with left/right arrows — optimized for touch, dependency-free and fully themeable (colors, fonts, sizes and custom icons).",
   "keywords": [
     "react-native",
