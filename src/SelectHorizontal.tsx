@@ -38,40 +38,31 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
         testID,
     } = props;
 
-    const [actualPosition, setActualPosition] = useState<number>(startPosition);
-    const [isShowLeft, setIsShowLeft] = useState<boolean>(startPosition !== 0);
-    const [isShowRight, setIsShowRight] = useState<boolean>(
-        startPosition !== data.length - 1 && data.length - 1 !== -1,
-    );
+    const [position, setPosition] = useState<number>(startPosition);
 
     const lastIndex = data.length - 1;
+    const actualPosition = Math.min(Math.max(position, 0), Math.max(lastIndex, 0));
+    const isLeftVisible = actualPosition > 0;
+    const isRightVisible = actualPosition < lastIndex;
     const arrowSlotSize = iconSize * 2;
     const resolvedIconColor = iconColor ?? accentColor;
     const isLabelVisible = !!labelText && labelText.trim() !== '';
 
-    const handleMinus = () => {
-        if (actualPosition > 0) {
-            const newPosition = actualPosition - 1;
+    const handleStep = (step: number) => {
+        const newPosition = actualPosition + step;
 
-            setActualPosition(newPosition);
-            setIsShowLeft(newPosition > 0);
-            setIsShowRight(true);
-
-            onChange?.(newPosition, data[newPosition]);
+        if (newPosition < 0 || newPosition > lastIndex) {
+            return;
         }
+
+        setPosition(newPosition);
+
+        onChange?.(newPosition, data[newPosition]);
     };
 
-    const handlePlus = () => {
-        if (actualPosition < lastIndex) {
-            const newPosition = actualPosition + 1;
+    const handleMinus = () => handleStep(-1);
 
-            setActualPosition(newPosition);
-            setIsShowLeft(true);
-            setIsShowRight(newPosition !== lastIndex);
-
-            onChange?.(newPosition, data[newPosition]);
-        }
-    };
+    const handlePlus = () => handleStep(1);
 
     const renderArrow = (
         direction: 'left' | 'right',
@@ -122,7 +113,7 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
             <View
                 style={[styles.container, { backgroundColor: primaryColor, borderRadius }, style]}
             >
-                {isShowLeft ? (
+                {isLeftVisible ? (
                     <TouchableOpacity
                         testID="btnLeft"
                         activeOpacity={0.6}
@@ -152,7 +143,7 @@ function SelectHorizontal<T extends SelectHorizontalItem>(
                     {data[actualPosition]?.label}
                 </Text>
 
-                {isShowRight ? (
+                {isRightVisible ? (
                     <TouchableOpacity
                         testID="btnRight"
                         activeOpacity={0.6}
