@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import SelectHorizontal, {
     type SelectHorizontalItem,
@@ -40,6 +40,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 export default function App(): React.JSX.Element {
     const [selected, setSelected] = useState('Daily');
     const [asyncData, setAsyncData] = useState<SelectHorizontalItem[]>([]);
+    const [controlledIndex, setControlledIndex] = useState(2);
 
     useEffect(() => {
         const timeout = setTimeout(() => setAsyncData(FREQUENCY), 1500);
@@ -96,6 +97,42 @@ export default function App(): React.JSX.Element {
                         primaryColor="#E02241"
                         accentColor="#FFFFFF"
                         style={styles.rounded}
+                    />
+                </Section>
+
+                <Section title="Controlled (selectedIndex)">
+                    <SelectHorizontal
+                        labelText="Frequency"
+                        data={FREQUENCY}
+                        selectedIndex={controlledIndex}
+                        onChange={(position) => setControlledIndex(position)}
+                    />
+                    <Pressable
+                        accessibilityRole="button"
+                        style={styles.resetButton}
+                        onPress={() => setControlledIndex(0)}
+                    >
+                        <Text style={styles.resetText}>Reset to Daily</Text>
+                    </Pressable>
+                </Section>
+
+                <Section title="isLoopEnabled">
+                    <SelectHorizontal
+                        labelText="Frequency"
+                        data={FREQUENCY}
+                        isLoopEnabled
+                        primaryColor="#0E7C66"
+                    />
+                </Section>
+
+                <Section title={'arrowVisibility="disable" + Spanish a11y labels'}>
+                    <SelectHorizontal
+                        labelText="Frecuencia"
+                        data={FREQUENCY}
+                        arrowVisibility="disable"
+                        previousAccessibilityLabel="Anterior"
+                        nextAccessibilityLabel="Siguiente"
+                        primaryColor="#E02241"
                     />
                 </Section>
 
@@ -158,6 +195,17 @@ const styles = StyleSheet.create({
     result: {
         fontSize: 14,
         color: '#212121',
+    },
+    resetButton: {
+        alignSelf: 'flex-start',
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 6,
+        backgroundColor: '#E6E6F0',
+    },
+    resetText: {
+        fontSize: 14,
+        color: '#1D1B48',
     },
     rounded: {
         borderRadius: 12,
