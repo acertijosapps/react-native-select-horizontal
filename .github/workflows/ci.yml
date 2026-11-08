@@ -31,7 +31,7 @@ jobs:
       - run: yarn build
 
   example:
-    name: Example (typecheck)
+    name: Example (typecheck, lint y formato)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -45,3 +45,5 @@ jobs:
           cache-dependency-path: example/yarn.lock
       - run: yarn install --frozen-lockfile
       - run: yarn typecheck
+      - run: yarn lint
+      - run: yarn format:check
