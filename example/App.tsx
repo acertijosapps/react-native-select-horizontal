@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import SelectHorizontal, {
+import {
+    SelectHorizontal,
     type SelectHorizontalItem,
 } from '@acertijosapps/react-native-select-horizontal';
 import { StatusBar } from 'expo-status-bar';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 const FREQUENCY: SelectHorizontalItem[] = [
     { id: 1, label: 'Daily' },
@@ -49,121 +51,123 @@ export default function App(): React.JSX.Element {
     }, []);
 
     return (
-        <SafeAreaView style={styles.safe}>
-            <StatusBar style="dark" />
-            <ScrollView contentContainerStyle={styles.content}>
-                <Text style={styles.heading}>react-native-select-horizontal</Text>
+        <SafeAreaProvider>
+            <SafeAreaView style={styles.safe}>
+                <StatusBar style="dark" />
+                <ScrollView contentContainerStyle={styles.content}>
+                    <Text style={styles.heading}>react-native-select-horizontal</Text>
 
-                <Section title="Defaults">
-                    <SelectHorizontal
-                        labelText="Frequency"
-                        data={FREQUENCY}
-                        onChange={(_, item) => setSelected(item.label)}
-                    />
-                    <Text style={styles.result}>Selected: {selected}</Text>
-                </Section>
+                    <Section title="Defaults">
+                        <SelectHorizontal
+                            labelText="Frequency"
+                            data={FREQUENCY}
+                            onChange={(_, item) => setSelected(item.label)}
+                        />
+                        <Text style={styles.result}>Selected: {selected}</Text>
+                    </Section>
 
-                <Section title="Custom theme">
-                    <SelectHorizontal
-                        labelText="Plan size"
-                        data={SIZES}
-                        startPosition={1}
-                        primaryColor="#0E7C66"
-                        accentColor="#FFFFFF"
-                        fontSize={20}
-                        iconSize={34}
-                        style={styles.rounded}
-                    />
-                </Section>
+                    <Section title="Custom theme">
+                        <SelectHorizontal
+                            labelText="Plan size"
+                            data={SIZES}
+                            startPosition={1}
+                            primaryColor="#0E7C66"
+                            accentColor="#FFFFFF"
+                            fontSize={20}
+                            iconSize={34}
+                            style={styles.rounded}
+                        />
+                    </Section>
 
-                <Section title="Custom arrow icons (emoji)">
-                    <SelectHorizontal
-                        labelText="Frequency"
-                        data={FREQUENCY}
-                        primaryColor="#1D1B48"
-                        accentColor="#FFD166"
-                        renderLeftIcon={({ size }) => (
-                            <Text style={{ fontSize: size * 0.7 }}>⬅️</Text>
-                        )}
-                        renderRightIcon={({ size }) => (
-                            <Text style={{ fontSize: size * 0.7 }}>➡️</Text>
-                        )}
-                    />
-                </Section>
+                    <Section title="Custom arrow icons (emoji)">
+                        <SelectHorizontal
+                            labelText="Frequency"
+                            data={FREQUENCY}
+                            primaryColor="#1D1B48"
+                            accentColor="#FFD166"
+                            renderLeftIcon={({ size }) => (
+                                <Text style={{ fontSize: size * 0.7 }}>⬅️</Text>
+                            )}
+                            renderRightIcon={({ size }) => (
+                                <Text style={{ fontSize: size * 0.7 }}>➡️</Text>
+                            )}
+                        />
+                    </Section>
 
-                <Section title="No label">
-                    <SelectHorizontal
-                        data={SIZES}
-                        primaryColor="#E02241"
-                        accentColor="#FFFFFF"
-                        style={styles.rounded}
-                    />
-                </Section>
+                    <Section title="No label">
+                        <SelectHorizontal
+                            data={SIZES}
+                            primaryColor="#E02241"
+                            accentColor="#FFFFFF"
+                            style={styles.rounded}
+                        />
+                    </Section>
 
-                <Section title="Controlled (selectedIndex)">
-                    <SelectHorizontal
-                        labelText="Frequency"
-                        data={FREQUENCY}
-                        selectedIndex={controlledIndex}
-                        onChange={(position) => setControlledIndex(position)}
-                    />
-                    <Pressable
-                        accessibilityRole="button"
-                        style={styles.resetButton}
-                        onPress={() => setControlledIndex(0)}
-                    >
-                        <Text style={styles.resetText}>Reset to Daily</Text>
-                    </Pressable>
-                </Section>
+                    <Section title="Controlled (selectedIndex)">
+                        <SelectHorizontal
+                            labelText="Frequency"
+                            data={FREQUENCY}
+                            selectedIndex={controlledIndex}
+                            onChange={(position) => setControlledIndex(position)}
+                        />
+                        <Pressable
+                            accessibilityRole="button"
+                            style={styles.resetButton}
+                            onPress={() => setControlledIndex(0)}
+                        >
+                            <Text style={styles.resetText}>Reset to Daily</Text>
+                        </Pressable>
+                    </Section>
 
-                <Section title="isLoopEnabled">
-                    <SelectHorizontal
-                        labelText="Frequency"
-                        data={FREQUENCY}
-                        isLoopEnabled
-                        primaryColor="#0E7C66"
-                    />
-                </Section>
+                    <Section title="isLoopEnabled">
+                        <SelectHorizontal
+                            labelText="Frequency"
+                            data={FREQUENCY}
+                            isLoopEnabled
+                            primaryColor="#0E7C66"
+                        />
+                    </Section>
 
-                <Section title={'arrowVisibility="disable" + Spanish a11y labels'}>
-                    <SelectHorizontal
-                        labelText="Frecuencia"
-                        data={FREQUENCY}
-                        arrowVisibility="disable"
-                        previousAccessibilityLabel="Anterior"
-                        nextAccessibilityLabel="Siguiente"
-                        primaryColor="#E02241"
-                    />
-                </Section>
+                    <Section title={'arrowVisibility="disable" + Spanish a11y labels'}>
+                        <SelectHorizontal
+                            labelText="Frecuencia"
+                            data={FREQUENCY}
+                            arrowVisibility="disable"
+                            previousAccessibilityLabel="Anterior"
+                            nextAccessibilityLabel="Siguiente"
+                            primaryColor="#E02241"
+                        />
+                    </Section>
 
-                <Section title="Async data (loads after 1.5 s)">
-                    <SelectHorizontal
-                        labelText={asyncData.length ? 'Loaded' : 'Loading…'}
-                        data={asyncData}
-                        testID="async"
-                    />
-                </Section>
+                    <Section title="Async data (loads after 1.5 s)">
+                        <SelectHorizontal
+                            labelText={asyncData.length ? 'Loaded' : 'Loading…'}
+                            data={asyncData}
+                            testID="async"
+                        />
+                    </Section>
 
-                <Section title="startPosition out of range (99)">
-                    <SelectHorizontal
-                        data={SIZES}
-                        startPosition={99}
-                        primaryColor="#0E7C66"
-                    />
-                </Section>
+                    <Section title="startPosition out of range (99)">
+                        <SelectHorizontal
+                            data={SIZES}
+                            startPosition={99}
+                            primaryColor="#0E7C66"
+                        />
+                    </Section>
 
-                <Section title="Long text (overflow) + iconStyle">
-                    <SelectHorizontal
-                        labelText="Overflow test"
-                        data={LONG_TEXT}
-                        startPosition={1}
-                        primaryColor="#6C3AED"
-                        accentColor="#FFFFFF"
-                        iconStyle={{ fontWeight: '700' }}
-                    />
-                </Section>
-            </ScrollView>
-        </SafeAreaView>
+                    <Section title="Long text (overflow) + iconStyle">
+                        <SelectHorizontal
+                            labelText="Overflow test"
+                            data={LONG_TEXT}
+                            startPosition={1}
+                            primaryColor="#6C3AED"
+                            accentColor="#FFFFFF"
+                            iconStyle={{ fontWeight: '700' }}
+                        />
+                    </Section>
+                </ScrollView>
+            </SafeAreaView>
+        </SafeAreaProvider>
     );
 }
 

@@ -1,32 +1,36 @@
 const path = require('path');
-const {getDefaultConfig} = require('expo/metro-config');
-const exclusionList = require('metro-config/src/defaults/exclusionList');
+const { getDefaultConfig } = require('expo/metro-config');
 
-const root = path.resolve(__dirname, '..');
+const libraryRoot = path.resolve(__dirname, '..');
+const libraryPackage = require('../package.json');
+
+const escapePath = (value) => value.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
 
 const config = getDefaultConfig(__dirname);
 
-// Watch the library source (one level up) so live edits reload the example.
-config.watchFolders = [root];
+config.watchFolders = [libraryRoot];
 
-// The library root carries its own react / react-native (as devDependencies for
-// typechecking). Those must NOT be bundled — otherwise there are two copies of
-// react-native and AppRegistry.runApplication() fails with
-// "Module has not been registered as callable (n = 0)". Block the root copies
-// and force every import to resolve the example's single copy.
-config.resolver.blockList = exclusionList([
-  new RegExp(`${path.join(root, 'node_modules', 'react')}/.*`),
-  new RegExp(`${path.join(root, 'node_modules', 'react-native')}/.*`),
-]);
+// La librería se resuelve desde su código fuente (`../src`), no desde `lib/`, para ver los
+// cambios con Fast Refresh sin compilar.
+// `tsconfigPaths` está apagado en app.json: los `paths` del tsconfig existen solo para que
+// TypeScript lea los tipos de los peers desde este example.
+// El `node_modules` de la raíz se bloquea para que react y react-native se resuelvan una
+// sola vez, desde el `node_modules` de este example.
+config.resolver.blockList = [
+    new RegExp(`^${escapePath(path.join(libraryRoot, 'node_modules'))}\\/.*$`),
+];
+config.resolver.nodeModulesPaths = [path.join(__dirname, 'node_modules')];
 
-config.resolver.nodeModulesPaths = [path.resolve(__dirname, 'node_modules')];
+const defaultResolveRequest = config.resolver.resolveRequest;
 
-config.resolver.extraNodeModules = new Proxy(
-  {},
-  {
-    get: (_target, name) =>
-      path.resolve(__dirname, 'node_modules', name.toString()),
-  },
-);
+config.resolver.resolveRequest = (context, moduleName, platform) => {
+    const resolve = defaultResolveRequest ?? context.resolveRequest;
+
+    if (moduleName === libraryPackage.name) {
+        return { type: 'sourceFile', filePath: path.join(libraryRoot, 'src', 'index.tsx') };
+    }
+
+    return resolve(context, moduleName, platform);
+};
 
 module.exports = config;

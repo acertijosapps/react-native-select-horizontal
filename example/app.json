@@ -5,13 +5,12 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
     "ios": {
       "supportsTablet": true
     },
-    "android": {},
+    "android": {
+      "predictiveBackGestureEnabled": false
+    },
     "web": {},
     "experiments": {
       "tsconfigPaths": false
