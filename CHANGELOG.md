@@ -6,11 +6,16 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Unreleased]
 
-## [1.0.3] - 2026-11-07
+## [1.0.4] - 2026-11-08
 
 ### Changed
 
 - El repositorio se movió a GitHub: [acertijosapps/react-native-select-horizontal](https://github.com/acertijosapps/react-native-select-horizontal). `repository`, `bugs` y la imagen del README apuntan ahí.
+
+## [1.0.3] - 2026-10-12
+
+### Changed
+
 - `author` es AcertijosApps (`acertijos.contacto@gmail.com`) y `homepage` apunta a [acertijosapps.com/librerias/react-native-select-horizontal](https://acertijosapps.com/librerias/react-native-select-horizontal).
 - El copyright del LICENSE es de AcertijosApps.
 
