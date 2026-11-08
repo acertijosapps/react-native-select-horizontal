@@ -6,6 +6,10 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Unreleased]
 
+### Changed
+
+- `example/` pasa a Expo SDK 57 (React Native 0.86, React 19.2, TypeScript 6) con ESLint 9 en configuración flat. Metro resuelve la librería desde `../src` con `resolveRequest`, sin `babel-plugin-module-resolver`, y `SafeAreaView` viene de `react-native-safe-area-context`.
+
 ## [1.1.0] - 2026-11-08
 
 ### Added
