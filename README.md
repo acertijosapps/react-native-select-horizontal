@@ -205,8 +205,8 @@ tradúcelas al idioma de tu app:
 
 ## Example
 
-En [`example/`](example) hay una app de Expo que importa el componente directo de `src` (con
-`babel-plugin-module-resolver` y `watchFolders` de Metro), así que los cambios en la librería se
+En [`example/`](example) hay una app de Expo (SDK 57) que importa el componente directo de `src`
+(Metro lo resuelve con `resolveRequest` y `watchFolders`), así que los cambios en la librería se
 recargan en la demo.
 
 ```bash
