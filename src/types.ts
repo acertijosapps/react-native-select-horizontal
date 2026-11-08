@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { TextStyle, ViewStyle } from 'react-native';
+import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 /**
  * Excepción declarada a Code Style §10 ("sin comentarios"): este archivo describe
@@ -67,15 +67,15 @@ export interface SelectHorizontalProps<T extends SelectHorizontalItem = SelectHo
     renderRightIcon?: (props: ArrowRenderProps) => ReactNode;
 
     /** Style for the outer wrapper (label + bar). */
-    contentContainerStyle?: ViewStyle;
+    contentContainerStyle?: StyleProp<ViewStyle>;
     /** Style for the selector bar (the row with arrows and value). */
-    style?: ViewStyle;
+    style?: StyleProp<ViewStyle>;
     /** Extra style for the label text. */
-    labelStyle?: TextStyle;
+    labelStyle?: StyleProp<TextStyle>;
     /** Extra style for the selected value text. */
-    valueStyle?: TextStyle;
+    valueStyle?: StyleProp<TextStyle>;
     /** Extra style for the default chevron glyphs. Ignored when `renderLeftIcon`/`renderRightIcon` are set. */
-    iconStyle?: TextStyle;
+    iconStyle?: StyleProp<TextStyle>;
 
     /**
      * testID for the root view. The arrows get `${testID}-left` and `${testID}-right`;
