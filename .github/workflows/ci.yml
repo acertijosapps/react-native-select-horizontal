@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   library:
-    name: Typecheck, lint y build
+    name: Typecheck, lint, test y build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -27,6 +27,7 @@ jobs:
       - run: yarn typecheck
       - run: yarn lint
       - run: yarn format:check
+      - run: yarn test --ci
       - run: yarn build
 
   example:
