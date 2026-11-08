@@ -21,10 +21,10 @@
   "author": "AcertijosApps <acertijos.contacto@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/acertijoslibs/rnselecthorizontal.git"
+    "url": "git+https://github.com/acertijosapps/react-native-select-horizontal.git"
   },
   "bugs": {
-    "url": "https://gitlab.com/acertijoslibs/rnselecthorizontal/-/issues"
+    "url": "https://github.com/acertijosapps/react-native-select-horizontal/issues"
   },
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
