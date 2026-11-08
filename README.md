@@ -1,40 +1,48 @@
 # @acertijosapps/react-native-select-horizontal
 
-A sleek, mobile-first alternative to the traditional dropdown for React Native.
-Instead of opening a menu that covers the screen, users step through the options
-inline with left/right arrows — a faster, one-handed, thumb-friendly pattern
-built for phones. Dependency-free and fully themeable, so it adopts your design
-system: colors, sizes, fonts and even custom arrow icons.
+Una alternativa al dropdown tradicional para React Native, pensada para el celular. En vez de abrir
+un menú que tapa la pantalla, el usuario recorre las opciones en el mismo lugar con flechas a la
+izquierda y a la derecha: más rápido, con una sola mano y al alcance del pulgar. Sin dependencias y
+con el tema completo por props, así que se adapta a tu design system: colores, tamaños, fuentes y
+hasta los íconos de las flechas.
 
-**Zero runtime dependencies.** Only `react` and `react-native` as peers.
+Página de la librería: [acertijosapps.com/librerias/react-native-select-horizontal](https://acertijosapps.com/librerias/react-native-select-horizontal)
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/acertijosapps/react-native-select-horizontal/main/assets/preview.png" alt="SelectHorizontal preview" width="360" />
+  <img src="https://raw.githubusercontent.com/acertijosapps/react-native-select-horizontal/main/assets/preview.png" alt="SelectHorizontal con el tema por default, un tema verde y uno rojo sin etiqueta" width="360" />
 </p>
 
-## Install
+- **Sin dependencias de runtime:** solo `react` y `react-native` como peers.
+- Modo no controlado (`startPosition`) o controlado (`selectedIndex`).
+- Recorrido circular opcional (`isLoopEnabled`).
+- La flecha sin paso se oculta o se muestra deshabilitada (`arrowVisibility`), sin mover el texto.
+- Accesible: la barra es un elemento `adjustable` que anuncia la opción y avanza con los gestos del
+  lector de pantalla.
+- Colores, tamaños, fuentes, estilos e íconos de las flechas configurables.
+
+## Instalación
 
 ```bash
 yarn add @acertijosapps/react-native-select-horizontal
-# or
+# o
 npm install @acertijosapps/react-native-select-horizontal
 ```
 
-## Usage
+## Uso
 
 ```tsx
 import SelectHorizontal from '@acertijosapps/react-native-select-horizontal';
 
 const data = [
-    { id: 1, label: 'Daily' },
-    { id: 2, label: 'Weekly' },
-    { id: 3, label: 'Monthly' },
+    { id: 1, label: 'Diario' },
+    { id: 2, label: 'Semanal' },
+    { id: 3, label: 'Mensual' },
 ];
 
 export function Example() {
     return (
         <SelectHorizontal
-            labelText="Frequency"
+            labelText="Frecuencia"
             data={data}
             startPosition={0}
             onChange={(position, item) => console.log(position, item.label)}
@@ -43,10 +51,50 @@ export function Example() {
 }
 ```
 
-### Theming
+### Modo controlado
 
-Every dimension and color is a prop with a constant default, so the component
-adopts your design system:
+Con `selectedIndex` el componente muestra ese índice y solo reporta los pasos por `onChange`.
+Actualízalo desde ahí; así puedes resetear la selección o sincronizarla con otro estado:
+
+```tsx
+const [index, setIndex] = useState(0);
+
+<SelectHorizontal
+    data={data}
+    selectedIndex={index}
+    onChange={(position) => setIndex(position)}
+/>;
+```
+
+Un índice fuera de rango se acota a `data`, igual que `startPosition`.
+
+### Recorrido circular y flechas en los extremos
+
+```tsx
+<SelectHorizontal
+    data={data}
+    isLoopEnabled
+/>
+```
+
+Con `isLoopEnabled` el último elemento lleva al primero y al revés, así que las dos flechas siempre
+están activas (salvo con una sola opción).
+
+Sin loop, en los extremos la flecha que no tiene paso se oculta y su lugar queda reservado, para que
+el texto no se mueva. Con `arrowVisibility="disable"` se queda visible, atenuada
+(`DISABLED_ARROW_OPACITY`) y sin respuesta:
+
+```tsx
+<SelectHorizontal
+    data={data}
+    arrowVisibility="disable"
+/>
+```
+
+### Tema
+
+Cada dimensión y color es una prop con un default constante, así que el componente se adapta a tu
+design system:
 
 ```tsx
 <SelectHorizontal
@@ -63,9 +111,8 @@ adopts your design system:
 />
 ```
 
-Defaults: `fontSize` 18, `iconSize` 25, `borderRadius` 9, `primaryColor`
-`#1D1B48`, `accentColor` `#FFFFFF`. They are also exported if you want to
-reference them:
+Defaults: `fontSize` 18, `iconSize` 25, `borderRadius` 9, `primaryColor` `#1D1B48`, `accentColor`
+`#FFFFFF`. También se exportan por si quieres usarlos:
 
 ```tsx
 import {
@@ -77,10 +124,13 @@ import {
 } from '@acertijosapps/react-native-select-horizontal';
 ```
 
-### Custom arrows
+Las props de estilo (`contentContainerStyle`, `style`, `labelStyle`, `valueStyle`, `iconStyle`)
+aceptan `StyleProp`: objetos, arrays y estilos de `StyleSheet.create`.
 
-By default arrows render as text chevrons (`‹` `›`). Pass any component through
-the render props to bring your own icons (an SVG, an icon font, an emoji…):
+### Flechas personalizadas
+
+Por default las flechas son chevrons de texto (`‹` `›`). Pasa cualquier componente por los render
+props para usar tus propios íconos (un SVG, una fuente de íconos, un emoji…):
 
 ```tsx
 <SelectHorizontal
@@ -91,56 +141,91 @@ the render props to bring your own icons (an SVG, an icon font, an emoji…):
             color={color}
         />
     )}
-    renderRightIcon={({ size, color }) => (
+    renderRightIcon={({ size, color, isDisabled }) => (
         <MyChevronRight
             size={size}
-            color={color}
+            color={isDisabled ? 'gray' : color}
         />
     )}
 />
 ```
 
-## Props
+`isDisabled` llega en `true` solo con `arrowVisibility="disable"`, en la flecha que no tiene paso.
 
-| Prop                    | Type                                          | Default     | Description                                   |
-| ----------------------- | --------------------------------------------- | ----------- | --------------------------------------------- |
-| `data`                  | `{ id: number \| string; label: string }[]`   | —           | **Required.** Options to page through.        |
-| `startPosition`         | `number`                                      | `0`         | Index selected on mount.                      |
-| `labelText`             | `string`                                      | `''`        | Label above the bar. Hidden when empty.       |
-| `onChange`              | `(position: number, item) => void`            | —           | Fired when the selection changes.             |
-| `fontSize`              | `number`                                      | `18`        | Label and value font size.                    |
-| `iconSize`              | `number`                                      | `25`        | Arrow icon size.                              |
-| `borderRadius`          | `number`                                      | `9`         | Corner radius of the selector bar.            |
-| `primaryColor`          | `string`                                      | `#1D1B48`   | Bar background and label color.               |
-| `accentColor`           | `string`                                      | `#FFFFFF`   | Value and arrow color.                        |
-| `iconColor`             | `string`                                      | `accentColor` | Overrides `accentColor` for arrows only.    |
-| `fontFamily`            | `string`                                      | —           | Font family for label and value.              |
-| `labelFontWeight`       | `TextStyle['fontWeight']`                     | normal      | Weight of the label.                          |
-| `valueFontWeight`       | `TextStyle['fontWeight']`                     | bold        | Weight of the selected value.                 |
-| `renderLeftIcon`        | `(p: ArrowRenderProps) => ReactNode`          | text `‹`    | Custom left arrow.                            |
-| `renderRightIcon`       | `(p: ArrowRenderProps) => ReactNode`          | text `›`    | Custom right arrow.                           |
-| `contentContainerStyle` | `ViewStyle`                                   | —           | Outer wrapper style.                          |
-| `style`                 | `ViewStyle`                                   | —           | Selector bar style.                           |
-| `labelStyle`            | `TextStyle`                                   | —           | Extra label style.                            |
-| `valueStyle`            | `TextStyle`                                   | —           | Extra value style.                            |
-| `iconStyle`             | `TextStyle`                                   | —           | Style for the default chevrons (ignored with custom render). |
-| `testID`                | `string`                                      | —           | testID for the root view. Arrows get `${testID}-left` / `${testID}-right` (`btnLeft` / `btnRight` without it). |
+### Accesibilidad
+
+La barra es un elemento `adjustable`: el lector de pantalla anuncia su etiqueta y la opción
+seleccionada, y avanza o retrocede con swipe arriba/abajo (VoiceOver) o los gestos de ajuste
+(TalkBack). La etiqueta es `labelText`, o `accessibilityLabel` si lo pasas. Las flechas son botones
+con `previousAccessibilityLabel` y `nextAccessibilityLabel` (default `'Previous'` / `'Next'`);
+tradúcelas al idioma de tu app:
+
+```tsx
+<SelectHorizontal
+    data={data}
+    labelText="Frecuencia"
+    previousAccessibilityLabel="Anterior"
+    nextAccessibilityLabel="Siguiente"
+/>
+```
+
+## API
+
+| Prop                         | Tipo                                        | Default         | Descripción                                                                                |
+| ---------------------------- | ------------------------------------------- | --------------- | ------------------------------------------------------------------------------------------ |
+| `data`                       | `{ id: number \| string; label: string }[]` | —               | **Requerida.** Opciones a recorrer.                                                         |
+| `selectedIndex`              | `number`                                    | —               | Índice seleccionado en modo controlado.                                                     |
+| `startPosition`              | `number`                                    | `0`             | Índice inicial en modo no controlado.                                                       |
+| `isLoopEnabled`              | `boolean`                                   | `false`         | Del último elemento vuelve al primero y al revés.                                           |
+| `arrowVisibility`            | `'hide' \| 'disable'`                       | `'hide'`        | Oculta o deshabilita la flecha sin paso.                                                    |
+| `labelText`                  | `string`                                    | `''`            | Etiqueta sobre la barra. Se oculta si está vacía.                                           |
+| `onChange`                   | `(position: number, item) => void`          | —               | Se llama al cambiar la selección.                                                           |
+| `fontSize`                   | `number`                                    | `18`            | Tamaño de la etiqueta y del valor.                                                          |
+| `iconSize`                   | `number`                                    | `25`            | Tamaño de las flechas.                                                                      |
+| `borderRadius`               | `number`                                    | `9`             | Radio de las esquinas de la barra.                                                          |
+| `primaryColor`               | `string`                                    | `#1D1B48`       | Fondo de la barra y color de la etiqueta.                                                   |
+| `accentColor`                | `string`                                    | `#FFFFFF`       | Color del valor y de las flechas.                                                           |
+| `iconColor`                  | `string`                                    | `accentColor`   | Reemplaza `accentColor` solo en las flechas.                                                |
+| `fontFamily`                 | `string`                                    | —               | Fuente de la etiqueta y del valor.                                                          |
+| `labelFontWeight`            | `TextStyle['fontWeight']`                   | normal          | Peso de la etiqueta.                                                                        |
+| `valueFontWeight`            | `TextStyle['fontWeight']`                   | bold            | Peso del valor seleccionado.                                                                |
+| `renderLeftIcon`             | `(p: ArrowRenderProps) => ReactNode`        | texto `‹`       | Flecha izquierda personalizada.                                                             |
+| `renderRightIcon`            | `(p: ArrowRenderProps) => ReactNode`        | texto `›`       | Flecha derecha personalizada.                                                               |
+| `accessibilityLabel`         | `string`                                    | `labelText`     | Etiqueta de la barra para el lector de pantalla.                                            |
+| `previousAccessibilityLabel` | `string`                                    | `'Previous'`    | Etiqueta de la flecha izquierda.                                                            |
+| `nextAccessibilityLabel`     | `string`                                    | `'Next'`        | Etiqueta de la flecha derecha.                                                              |
+| `contentContainerStyle`      | `StyleProp<ViewStyle>`                      | —               | Estilo del contenedor (etiqueta + barra).                                                   |
+| `style`                      | `StyleProp<ViewStyle>`                      | —               | Estilo de la barra.                                                                         |
+| `labelStyle`                 | `StyleProp<TextStyle>`                      | —               | Estilo extra de la etiqueta.                                                                |
+| `valueStyle`                 | `StyleProp<TextStyle>`                      | —               | Estilo extra del valor.                                                                     |
+| `iconStyle`                  | `StyleProp<TextStyle>`                      | —               | Estilo de los chevrons por default (no aplica con render props).                            |
+| `testID`                     | `string`                                    | —               | testID del contenedor. Las flechas usan `${testID}-left` / `${testID}-right` (`btnLeft` / `btnRight` sin él). |
+
+`ArrowRenderProps`: `{ size: number; color: string; isDisabled: boolean }`.
 
 ## Example
 
-A runnable Expo app lives in [`example/`](example). It imports the component
-straight from `src` (via `babel-plugin-module-resolver` + a Metro
-`watchFolders` config), so edits to the library hot-reload in the demo.
+En [`example/`](example) hay una app de Expo que importa el componente directo de `src` (con
+`babel-plugin-module-resolver` y `watchFolders` de Metro), así que los cambios en la librería se
+recargan en la demo.
 
 ```bash
 cd example
 yarn install
-yarn ios      # or: yarn android / yarn web
+yarn ios      # o: yarn android / yarn web
 ```
 
-The demo shows the defaults, a custom theme, custom arrow icons, and a label-less
-variant.
+La demo muestra los defaults, un tema propio, flechas personalizadas, el modo controlado, el loop,
+`arrowVisibility="disable"`, data asíncrona y textos largos.
 
-## License
+## Autor
+
+Hecho por [AcertijosApps](https://acertijosapps.com/librerias). Conoce el resto de nuestras
+librerías en [acertijosapps.com/librerias](https://acertijosapps.com/librerias).
+
+Dudas o propuestas: [acertijos.contacto@gmail.com](mailto:acertijos.contacto@gmail.com) o abre un
+[issue](https://github.com/acertijosapps/react-native-select-horizontal/issues).
+
+## Licencia
 
 MIT
